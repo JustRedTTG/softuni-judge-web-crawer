@@ -102,7 +102,7 @@ def get_exercises(login: dict, contest: dict):
     exercise_urls: list[str] = resp.text.split('"contentUrls":[')[1].split(']')[0].split(',')
     for i, exercise_url in enumerate(exercise_urls):
         exercises.append(get_exercise_information(login, exercise_url.strip('"'),
-                        'https://'+judge_url+f'Contests/{contest["type"].capitalize()}/Index/{contest["identifier"]}#{i}'))
+                        judge_url+f'Contests/{contest["type"].capitalize()}/Index/{contest["identifier"]}#{i}'))
     return exercises
 
 
