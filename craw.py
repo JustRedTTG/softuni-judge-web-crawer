@@ -39,9 +39,9 @@ def yes_or_no(msg: str) -> bool:
 
 def get_contest_type(ending_words: str) -> str:
     ending_words = ending_words.lower()
-    if ending_words == 'lab': return 'practice'
-    elif ending_words == 'exercise': return 'compete'
-    elif ending_words == 'exercises': return 'practice'
+    if ending_words[0] == 'l': return 'practice'
+    elif ending_words.endswith('es'): return 'practice'
+    elif ending_words.startswith('ex'): return 'compete'
     return 'unknown'
 
 
@@ -140,13 +140,16 @@ for contest_dict in contests_list:
         exercise_list += get_exercises(login_details.copy(), contest_dict)
     except:
         exercise_list += get_exercises(login_details.copy(), contest_dict)
-    finally:
-        traceback.print_exc()
+    print(f"Scanned contest \"{contest_dict['name']}\"")
 print(f"Got {len(exercise_list)} exercises!")
 #print("Got exercises!\n", *[exercise['name'] for exercise in exercise_list], sep='\n')
 
+contests_list = [contest for contest in contests_list if contest['type'] != 'unknown']
+
 save.save('exercises.sav', contests_list, exercise_list)
 
-print("Please use the evaluate.py to get your evaluation")
+# print("Please use the evaluate.py to get your evaluation")
+
+import evaluate
 
 input("Press enter to exit ")
