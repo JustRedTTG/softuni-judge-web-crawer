@@ -110,7 +110,7 @@ def write_for(f: _io.TextIOWrapper, indexes: list[int], msg: str):
 def html_for(f: _io.TextIOWrapper, indexes: list[int], msg: str, name: str):
     if len(indexes) > 0:
         f.write(f'<h1 class="{name}">=== {msg.upper()} ===</h1>')
-        f.write(''.join([f'<p class="{name}{" practice_color" if x.lower().startswith("practice") else " everything_color" if x.lower().startswith("everything") else " compete_color" if x.lower().startswith("compete") else ""}">{" ".join([y for i, y in enumerate(x.split()) if i < 2])} <a href="{x.split()[-1]}">here</a><p>' for x in compile_list(indexes)]))
+        f.write(''.join([f'<p class="{name}{" practice_color" if x.lower().startswith("practice") else " everything_color" if x.lower().startswith("everything") else " compete_color" if x.lower().startswith("compete") else ""}">{" ".join([y for i, y in enumerate(x.split()) if i < 2])} <a href="{x.split()[-1]}" target="_blank">here</a><p>' for x in compile_list(indexes)]))
         f.write('<br/>')
 
 
