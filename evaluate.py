@@ -87,8 +87,8 @@ def compile_contests(list_exercise: list[str]) -> list[str]:
             for exercise in exercises:
                 final.append(f"{contest_type.upper()} at {exercise['clickable_url']}")
         else:
-            final.append(f"EVERYTHING from https://judge.softuni.org/Contests/{contest_type.capitalize()}/Index/{contest}")
-    return sorted(final, key= lambda x: {'everything':0,'compete':1, 'practice': 2}[x.split()[0].lower()])
+            final.append(f"{contest_type.upper()+'D'} everything from https://judge.softuni.org/Contests/{contest_type.capitalize()}/Index/{contest}")
+    return sorted(final, key= lambda x: {'competed everything':0,'compete at':1, 'practiced everything':2, 'practice at': 3}[' '.join(x.split()[0:2]).lower()])
 
 
 def compile_list(indexes: list[int]) -> list[str]:
@@ -125,4 +125,4 @@ with open('report.html', 'w') as f:
     html_for(f, has_errors, 'has errors', 'has_errors')
     html_for(f, not_complete, 'not started', 'not_started')
     html_for(f, complete, 'complete', 'complete')
-    f.write("</body><style> a {color: red;} a:visited {color: green;} .complete {color: gray!important;} p.complete {background-color: #1A1A1A; width: fit-content;;} .practice_color {color: magenta;} .everything_color {color: orange;} .compete_color {color: yellow;} body, html {color: white;font-family: Arial, Helvetica, sans-serif; background-color:#202020}</style></html>")
+    f.write("</body><style> a {color: red;} a:visited {color: green;} .complete {color: gray!important;} p.complete {background-color: #1A1A1A; width: fit-content;;} .practice_color {color: magenta;} .compete_color {color: yellow;} body, html {color: white;font-family: Arial, Helvetica, sans-serif; background-color:#202020}</style></html>")
