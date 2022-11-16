@@ -87,8 +87,8 @@ def compile_contests(list_exercise: list[str]) -> list[str]:
             for exercise in exercises:
                 final.append(f"{contest_type.upper()} at {exercise['clickable_url']}")
         else:
-            final.append(f"{contest_type.upper()+'D'} everything from https://judge.softuni.org/Contests/{contest_type.capitalize()}/Index/{contest}")
-    return sorted(final, key= lambda x: {'competed everything':0,'compete at':1, 'practiced everything':2, 'practice at': 3}[' '.join(x.split()[0:2]).lower()])
+            final.append(f"{contest_type.upper()} everything from https://judge.softuni.org/Contests/{contest_type.capitalize()}/Index/{contest}")
+    return sorted(final, key= lambda x: {'compete everything':0,'compete at':1, 'practice everything':2, 'practice at': 3}[' '.join(x.split()[0:2]).lower()])
 
 
 def compile_list(indexes: list[int]) -> list[str]:
@@ -103,14 +103,14 @@ def compile_list(indexes: list[int]) -> list[str]:
 def write_for(f: _io.TextIOWrapper, indexes: list[int], msg: str):
     if len(indexes) > 0:
         f.write(f"=== {msg.upper()} ===\n\n")
-        f.writelines([x+'\n' for x in compile_list(indexes)])
+        f.writelines([' '.join([y+"D" if i == 0 and msg=="complete" else y for i, y in enumerate(x.split())])+'\n' for x in compile_list(indexes)])
         f.write('\n')
 
 
 def html_for(f: _io.TextIOWrapper, indexes: list[int], msg: str, name: str):
     if len(indexes) > 0:
         f.write(f'<h1 class="{name}">=== {msg.upper()} ===</h1>')
-        f.write(''.join([f'<p class="{name}{" practice_color" if x.lower().startswith("practice") else " everything_color" if x.lower().startswith("everything") else " compete_color" if x.lower().startswith("compete") else ""}">{" ".join([y for i, y in enumerate(x.split()) if i < 2])} <a href="{x.split()[-1]}" target="_blank">here</a><p>' for x in compile_list(indexes)]))
+        f.write(''.join([f'<p class="{name}{" practice_color" if x.lower().startswith("practice") else " compete_color" if x.lower().startswith("compete") else ""}">{" ".join([y+"D" if i == 0 and name=="complete" else y for i, y in enumerate(x.split()) if i < 2 or y in ["from", "at"]])} <a href="{x.split()[-1]}" target="_blank">here</a><p>' for x in compile_list(indexes)]))
         f.write('<br/>')
 
 
