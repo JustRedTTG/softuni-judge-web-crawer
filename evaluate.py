@@ -131,3 +131,5 @@ with open('report.html', 'w') as f:
     html_for(f, not_complete, 'not started', 'not_started')
     html_for(f, complete, 'complete', 'complete')
     f.write("</body><style> a {color: red;} a:visited {color: green;} .complete {color: gray!important;} p.complete {background-color: #1A1A1A; width: fit-content;;} .practice_color {color: magenta;} .compete_color {color: yellow;} body, html {color: white;font-family: Arial, Helvetica, sans-serif; background-color:#202020}</style></html>")
+
+if __name__ == '__main__': input("Press enter to exit ")

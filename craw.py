@@ -6,7 +6,65 @@ from typing import *
 
 judge_url: str = "https://judge.softuni.org/"
 login_url: str = "https://judge.softuni.org/Account/Login"
-contests_category_url: str = "191/Python-Fundamentals"
+list_of_content_groups = {
+    "Programming Basics": {
+        "C# Basics": "245/CSharp-Basics",
+        "Java Basics": "246/Java-Basics",
+        "JS Basics": "247/JS-Basics",
+        "Python Basics": "248/Python-Basics",
+        "PB - More Exercises": "193/PB-More-Exercises",
+        "PB - Exams": "38/PB-Exams",
+        "C++ Basics": "100/CPlusPlus-Basics",
+        "Go Basics": "338/Go-Basics",
+    },
+    "Fundamentals": {
+        "C# Fundamentals": "149/CSharp-Fundamentals",
+        "Java Fundamentals": "145/Java-Fundamentals",
+        "JS Fundamentals": "147/JS-Fundamentals",
+        "Python Fundamentals": "191/Python-Fundamentals",
+        "PHP Fundamentals": "148/PHP-Fundamentals",
+        "Fundamentals - Common": "154/Fundamentals-Common", # It's one lab LMAO
+        "Fundamentals - Exams": "153/Fundamentals-Exams",
+    },
+    "Pick my own using <number>/<name> format from url": {}
+}
+contests_category_url: str = None
+try:
+    contests_category_url = save.load('url_backup.sav')[0]
+    contests_category_url_was_loaded = True
+    print('Loaded url_backup.sav url data.')
+except TypeError: contests_category_url_was_loaded = False
+finally: i = 2 if contests_category_url_was_loaded else 'g'
+
+while type(i) != int:
+    print(*[f"[{i}] {key}" for i, key in enumerate(list_of_content_groups.keys())], sep="\n")
+    i = input("Pick: ")
+    try:
+        i = int(i)
+    except ValueError:
+        print('\n\nTry again')
+
+group = list_of_content_groups[list(list_of_content_groups.keys())[i]]
+if len(group.keys()) > 0:
+    i = 'g'
+    while type(i) != int:
+        print(*[f"[{i}] {key}" for i, key in enumerate(group.keys())], sep="\n")
+        i = input("Pick: ")
+        try:
+            i = int(i)
+        except ValueError:
+            print('\n\nTry again')
+    contests_category_url = group[list(group.keys())[i]]
+
+if not contests_category_url:
+    contests_category_url: str = input("url: ")
+if not contests_category_url_was_loaded:
+    if input('save url? [y/N] ').lower() == 'y':
+        save.save('url_backup.sav', contests_category_url)
+        print('Saved.\n')
+    else:
+        print('Skipped.\n')
+
 exercise_result_page_size = 10
 
 
