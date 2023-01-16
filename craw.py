@@ -26,6 +26,12 @@ list_of_content_groups = {
         "Fundamentals - Common": "154/Fundamentals-Common", # It's one lab LMAO
         "Fundamentals - Exams": "153/Fundamentals-Exams",
     },
+    "Advanced": {
+    	"C# Advanced": "182/CSharp-Advanced-Exercises",
+    	"Java Advanced": "175/Java-Advanced-Exercises",
+    	"Javascript Advanced": "306/JS-Advanced-Exercises",
+    	"Python Advanced": "209/Python-Advanced-Exercises"
+    },
     "Pick my own using <number>/<name> format from url": {}
 }
 contests_category_url: str = None
@@ -92,17 +98,19 @@ def yes_or_no(msg: str) -> bool:
     return input(f'{msg} [Y/n]').lower() != 'n' or False
 
 
-def get_contest_type(ending_words: str) -> str:
-    ending_words = ending_words.lower()
-    if ending_words[0] == 'l': return 'practice'
-    elif ending_words.endswith('es'): return 'practice'
-    elif ending_words.startswith('ex'): return 'compete'
+def get_contest_type(ending_wordsl: list[str]) -> str:
+    ending_wordsl.reverse()
+    for ending_words in ending_wordsl:
+    	ending_words = ending_words.lower()
+    	if ending_words[0] == 'l': return 'practice'
+    	elif ending_words.endswith('es'): return 'practice'
+    	elif 'ex' in ending_words: return 'compete'
     return 'unknown'
 
 
 def get_contests(category_url: str) -> Tuple[list[dict], int]:
     contests: list[dict] = []
-    for i in range(1,21):
+    for i in range(1,21): # This is the amount of pages to try and scrape!
         resp = S.get(judge_url+f'Contests/List/ByCategory/{category_url}?page={i}')
         if 'The selected category is empty.' in resp.text: break
         for line in resp.text.splitlines(False):
@@ -113,8 +121,9 @@ def get_contests(category_url: str) -> Tuple[list[dict], int]:
                     'identifier': int(identifier),
                     'name': name,
                     'url_name': url_name,
-                    'type': get_contest_type(url_name.split('-')[-1])
+                    'type': get_contest_type(url_name.split('-'))
                 })
+                #print(contests[-1])
     return contests, i-1
 
 
@@ -129,7 +138,6 @@ def get_exercise_information(exercise_url: str, clickable_url: str):
     number, name = exercise['full_name'].split(maxsplit=1)
     exercise['number'] = int(''.join([n for n in number if n.isdecimal()]))
     exercise['name'] = name
-    # TODO: get results
     resp = S.post(judge_url + exercise_url.lstrip('/').replace('Problem','ReadSubmissionResults'), {
         'sort': "SubmissionDate-desc",
         'page': 1,
