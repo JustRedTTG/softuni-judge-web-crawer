@@ -44,6 +44,10 @@ try:
 except TypeError: contests_category_url_was_loaded = False
 finally: i = 2 if contests_category_url_was_loaded else 'g'
 
+try:
+    complete_exercises = save.load('completed_exercises.sav')[0]
+except: complete_exercises = []
+
 while type(i) != int:
     print(*[f"[{i}] {key}" for i, key in enumerate(list_of_content_groups.keys())], sep="\n")
     i = input("Pick: ")
@@ -157,7 +161,10 @@ def get_exercises(contest: dict):
     #print(resp.text)
     exercise_urls: list[str] = resp.text.split('"contentUrls":[')[1].split(']')[0].split(',')
     for i, exercise_url in enumerate(exercise_urls):
-        exercises.append(get_exercise_information(exercise_url.strip('"'),
+        exercise_url = exercise_url.strip('"')
+        # Get the completed urls, continue if it's in them
+        if exercise_url in [exercise['url'] for exercise in complete_exercises]: continue
+        exercises.append(get_exercise_information(exercise_url,
                         judge_url+f'Contests/{contest["type"].capitalize()}/Index/{contest["identifier"]}#{i}'))
     contest['exercises'] = exercises
 
@@ -186,6 +193,7 @@ contests_list, number_of_pages = get_contests(contests_category_url)
 
 print(f"Got {len(contests_list)} contests!")
 exercise_list: list[dict] = []
+exercise_list.extend(complete_exercises) # extend with the completed exercises
 for contest_dict in contests_list:
     while 'exercises' not in contest_dict.keys(): pass
     exercise_list.extend(contest_dict['exercises'])
