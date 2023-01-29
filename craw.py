@@ -1,3 +1,5 @@
+import threading
+
 import requests
 import traceback
 import ast
@@ -157,7 +159,7 @@ def get_exercises(contest: dict):
     for i, exercise_url in enumerate(exercise_urls):
         exercises.append(get_exercise_information(exercise_url.strip('"'),
                         judge_url+f'Contests/{contest["type"].capitalize()}/Index/{contest["identifier"]}#{i}'))
-    return exercises
+    contest['exercises'] = exercises
 
 
 def login_to_judge() -> None:
@@ -186,10 +188,10 @@ print(f"Got {len(contests_list)} contests!")
 exercise_list: list[dict] = []
 for contest_dict in contests_list:
     if contest_dict['type'] == 'unknown': continue
-    try:
-        exercise_list += get_exercises(contest_dict)
-    except:
-        exercise_list += get_exercises(contest_dict)
+    threading.Thread(target=get_exercises, args=(contest_dict,)).start()
+for contest_dict in contests_list:
+    while 'exercises' not in contest_dict.keys(): pass
+    exercise_list.extend(contest_dict['exercises'])
     print(f"Scanned contest \"{contest_dict['name']}\"")
 
 print(f"Got {len(exercise_list)} exercises!")
