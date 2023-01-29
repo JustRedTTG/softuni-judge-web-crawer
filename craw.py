@@ -98,30 +98,21 @@ def yes_or_no(msg: str) -> bool:
     return input(f'{msg} [Y/n]').lower() != 'n' or False
 
 
-def get_contest_type(ending_wordsl: list[str]) -> str:
-    ending_wordsl.reverse()
-    for ending_words in ending_wordsl:
-    	ending_words = ending_words.lower()
-    	if ending_words[0] == 'l': return 'practice'
-    	elif ending_words.endswith('es'): return 'practice'
-    	elif 'ex' in ending_words: return 'compete'
-    return 'unknown'
-
-
 def get_contests(category_url: str) -> Tuple[list[dict], int]:
     contests: list[dict] = []
     for i in range(1,21): # This is the amount of pages to try and scrape!
         resp = S.get(judge_url+f'Contests/List/ByCategory/{category_url}?page={i}')
         if 'The selected category is empty.' in resp.text: break
-        for line in resp.text.splitlines(False):
+        lines = resp.text.splitlines(False)
+        for i, line in enumerate(lines):
             if line.startswith('<a href="    /Contests/'):
                 identifier, url_name = line.split('Contests/')[1].split('/')
-                name = resp.text.split(f'<a href="    /Contests/{identifier}/{url_name}\r\n">')[1].split('</a>')[0]
+                name = lines[i+1].split('>')[1].rstrip('</a')
                 contests.append({
                     'identifier': int(identifier),
                     'name': name,
                     'url_name': url_name,
-                    'type': get_contest_type(url_name.split('-'))
+                    'type': 'compete' if lines[4] != '</td>' else 'practice'
                 })
                 #print(contests[-1])
     return contests, i-1
