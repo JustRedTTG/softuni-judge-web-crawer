@@ -69,7 +69,11 @@ print(f"A total of {len(not_complete)}/{len(exercises_list)} exercises are not e
 print(f"A total of {len(complete)}/{other} exercises are 100/100 score!")
 print(f"A total of {len(has_errors)}/{other} exercises are not complete!\n")
 
+if os.path.isfile('completed_exercises.sav'):
+    if (prev_len := len(save.load('completed_exercises.sav')[0])) < len(complete):
+        print(f"Well done, you've completed {len(complete)-prev_len} exercises since the last report!")
 save.save('completed_exercises.sav', [exercises_list[index] for index in complete])
+print('Completed exercises will be saved to "completed_exercises.sav" to improve future craw time\n')
 
 print("Your report will be saved to report.txt and report.html")
 

@@ -1,4 +1,5 @@
 import threading
+import time
 
 import requests
 import traceback
@@ -80,6 +81,7 @@ if not contests_category_url_was_loaded:
 exercise_result_page_size = 10
 
 S = requests.session()
+craw_time = 0
 
 def get_verification_token() -> str:
     resp = S.get(login_url)
@@ -105,12 +107,14 @@ def yes_or_no(msg: str) -> bool:
 
 
 def get_contests(category_url: str) -> Tuple[list[dict], int]:
+    global craw_time
     contests: list[dict] = []
     for i in range(1,21): # This is the amount of pages to try and scrape!
         resp = S.get(judge_url+f'Contests/List/ByCategory/{category_url}?page={i}')
         if 'The selected category is empty.' in resp.text: break
         lines = resp.text.splitlines(False)
         for i, line in enumerate(lines):
+            start = time.time()
             if line.startswith('<a href="    /Contests/'):
                 identifier, url_name = line.split('Contests/')[1].split('/')
                 name = lines[i+1].split('>')[1].rstrip('</a')
@@ -121,6 +125,7 @@ def get_contests(category_url: str) -> Tuple[list[dict], int]:
                     'type': 'compete' if lines[4] != '</td>' else 'practice'
                 })
                 threading.Thread(target=get_exercises, args=(contests[-1],), daemon=True).start()
+            craw_time += time.time()-start
     return contests, i-1
 
 
@@ -156,11 +161,13 @@ def get_exercise_information(exercise_url: str, clickable_url: str):
 
 
 def get_exercises(contest: dict):
+    global craw_time
     resp = S.get(judge_url+f'Contests/{contest["type"].capitalize()}/Index/{contest["identifier"]}#0')
     exercises: list[dict] = []
     #print(resp.text)
     exercise_urls: list[str] = resp.text.split('"contentUrls":[')[1].split(']')[0].split(',')
     for i, exercise_url in enumerate(exercise_urls):
+
         exercise_url = exercise_url.strip('"')
         # Get the completed urls, continue if it's in them
         if exercise_url in [exercise['url'] for exercise in complete_exercises]: continue
@@ -195,15 +202,19 @@ print(f"Got {len(contests_list)} contests!")
 exercise_list: list[dict] = []
 exercise_list.extend(complete_exercises) # extend with the completed exercises
 for contest_dict in contests_list:
+    start = time.time()
     while 'exercises' not in contest_dict.keys(): pass
     exercise_list.extend(contest_dict['exercises'])
     print(f"Scanned contest \"{contest_dict['name']}\"")
+    craw_time += time.time() - start
 
 print(f"Got {len(exercise_list)} exercises!")
 
 contests_list = [contest for contest in contests_list if contest['type'] != 'unknown']
 
 save.save('exercises.sav', contests_list, exercise_list)
+
+print(f"Total time for crawing: {time.strftime('%M:%S', time.gmtime(craw_time))}")
 
 # print("Please use the evaluate.py to get your evaluation")
 
