@@ -69,7 +69,7 @@ print(f"A total of {len(not_complete)}/{len(exercises_list)} exercises are not e
 print(f"A total of {len(complete)}/{other} exercises are 100/100 score!")
 print(f"A total of {len(has_errors)}/{other} exercises are not complete!\n")
 
-save.save('completed_exercises.sav', [exercises_list[index]['url'] for index in complete])
+save.save('completed_exercises.sav', [exercises_list[index] for index in complete])
 
 print("Your report will be saved to report.txt and report.html")
 
