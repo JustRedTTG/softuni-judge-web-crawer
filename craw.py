@@ -116,7 +116,7 @@ def get_contests(category_url: str) -> Tuple[list[dict], int]:
                     'url_name': url_name,
                     'type': 'compete' if lines[4] != '</td>' else 'practice'
                 })
-                #print(contests[-1])
+                threading.Thread(target=get_exercises, args=(contests[-1],), daemon=True).start()
     return contests, i-1
 
 
@@ -186,9 +186,6 @@ contests_list, number_of_pages = get_contests(contests_category_url)
 
 print(f"Got {len(contests_list)} contests!")
 exercise_list: list[dict] = []
-for contest_dict in contests_list:
-    if contest_dict['type'] == 'unknown': continue
-    threading.Thread(target=get_exercises, args=(contest_dict,)).start()
 for contest_dict in contests_list:
     while 'exercises' not in contest_dict.keys(): pass
     exercise_list.extend(contest_dict['exercises'])
