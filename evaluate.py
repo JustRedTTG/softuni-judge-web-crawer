@@ -1,4 +1,6 @@
 import _io
+import os.path
+
 from hexicapi import save
 
 contests_list: list[dict]
@@ -61,19 +63,20 @@ for i, exercise in enumerate(submissions):
         else:
             has_errors.append(i)
 
-
-
-
 other: int = len(exercises_list)-len(not_complete)
 
 print(f"A total of {len(not_complete)}/{len(exercises_list)} exercises are not even started!")
 print(f"A total of {len(complete)}/{other} exercises are 100/100 score!")
 print(f"A total of {len(has_errors)}/{other} exercises are not complete!\n")
 
+save.save('completed_exercises.sav', [exercises_list[index]['url'] for index in complete])
+
 print("Your report will be saved to report.txt and report.html")
 
 space = ' '
-spacehtml = '%20'
+space_html = '%20'
+
+
 def compile_contests(list_exercise: list[str], html: bool = False) -> list[str]:
     contests: dict = {contest['identifier']: [] for contest in contests_list}
     contests_real: dict = {contest['identifier']: [] for contest in contests_list}
@@ -90,9 +93,9 @@ def compile_contests(list_exercise: list[str], html: bool = False) -> list[str]:
         if len(exercises) < len(contests_real[contest]):
             for exercise in exercises:
                 exercise_name: str = exercise['name']
-                final.append(f"{contest_type.upper()} at {exercise['clickable_url']}{f' {exercise_name.replace(space, spacehtml)}' if html else ''}")
+                final.append(f"{contest_type.upper()} at {exercise['clickable_url']}{f' {exercise_name.replace(space, space_html)}' if html else ''}")
         else:
-            final.append(f"{contest_type.upper()} everything from https://judge.softuni.org/Contests/{contest_type.capitalize()}/Index/{contest}{f' {contest_name.replace(space, spacehtml)}' if html else ''}")
+            final.append(f"{contest_type.upper()} everything from https://judge.softuni.org/Contests/{contest_type.capitalize()}/Index/{contest}{f' {contest_name.replace(space, space_html)}' if html else ''}")
     return sorted(final, key= lambda x: {'compete everything':0,'compete at':1, 'practice everything':2, 'practice at': 3}[' '.join(x.split()[0:2]).lower()])
 
 
@@ -105,6 +108,7 @@ def compile_list(indexes: list[int], html: bool = False) -> list[str]:
         ]
     ], html)
 
+
 def write_for(f: _io.TextIOWrapper, indexes: list[int], msg: str):
     if len(indexes) > 0:
         f.write(f"=== {msg.upper()} ===\n\n")
@@ -115,7 +119,7 @@ def write_for(f: _io.TextIOWrapper, indexes: list[int], msg: str):
 def html_for(f: _io.TextIOWrapper, indexes: list[int], msg: str, name: str):
     if len(indexes) > 0:
         f.write(f'<h1 class="{name}">=== {msg.upper()} ===</h1>')
-        f.write(''.join([f'<p class="{name}{" practice_color" if x.lower().startswith("practice") else " compete_color" if x.lower().startswith("compete") else ""}">{" ".join([y+"D" if i == 0 and name=="complete" else y for i, y in enumerate(x.split()) if i < 2 or y in ["from", "at"]])} <a href="{x.split()[-2]}" target="_blank">{x.split()[-1].replace(spacehtml, space)}</a><p>' for x in compile_list(indexes, True)]))
+        f.write(''.join([f'<p class="{name}{" practice_color" if x.lower().startswith("practice") else " compete_color" if x.lower().startswith("compete") else ""}">{" ".join([y+"D" if i == 0 and name=="complete" else y for i, y in enumerate(x.split()) if i < 2 or y in ["from", "at"]])} <a href="{x.split()[-2]}" target="_blank">{x.split()[-1].replace(space_html, space)}</a><p>' for x in compile_list(indexes, True)]))
         f.write('<br/>')
 
 
@@ -125,11 +129,13 @@ with open('report.txt', 'w') as f:
     write_for(f, complete, 'complete')
     f.write("Happy coding!")
 
+
 with open('report.html', 'w') as f:
     f.write("<!DOCTYPE html><html><meta><title>Report</title></meta><body>")
     html_for(f, has_errors, 'has errors', 'has_errors')
     html_for(f, not_complete, 'not started', 'not_started')
     html_for(f, complete, 'complete', 'complete')
     f.write("</body><style> a {color: red;} a:visited {color: green;} .complete {color: gray!important;} p.complete {background-color: #1A1A1A; width: fit-content;;} .practice_color {color: magenta;} .compete_color {color: yellow;} body, html {color: white;font-family: Arial, Helvetica, sans-serif; background-color:#202020}</style></html>")
+
 
 if __name__ == '__main__': input("Press enter to exit ")
