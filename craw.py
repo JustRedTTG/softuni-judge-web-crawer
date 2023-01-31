@@ -122,7 +122,7 @@ def get_contests(category_url: str) -> Tuple[list[dict], int]:
                     'identifier': int(identifier),
                     'name': name,
                     'url_name': url_name,
-                    'type': 'compete' if lines[4] != '</td>' else 'practice'
+                    'type': 'compete' if lines[i+4] != '</td>' else 'practice'
                 })
                 threading.Thread(target=get_exercises, args=(contests[-1],), daemon=True).start()
             craw_time += time.time()-start
