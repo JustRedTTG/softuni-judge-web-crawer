@@ -129,9 +129,10 @@ def get_contests(category_url: str) -> Tuple[list[dict], int]:
     return contests, i-1
 
 
-def get_exercise_information(exercise_url: str, clickable_url: str):
+def get_exercise_information(exercise_url: str, contest_identifier: int, clickable_url: str):
     exercise = {
         'url': exercise_url,
+        'contest_identifier': contest_identifier,
         'clickable_url': clickable_url
     }
 
@@ -171,7 +172,7 @@ def get_exercises(contest: dict):
         exercise_url = exercise_url.strip('"')
         # Get the completed urls, continue if it's in them
         if exercise_url in [exercise['url'] for exercise in complete_exercises]: continue
-        exercises.append(get_exercise_information(exercise_url,
+        exercises.append(get_exercise_information(exercise_url, contest["identifier"],
                         judge_url+f'Contests/{contest["type"].capitalize()}/Index/{contest["identifier"]}#{i}'))
     contest['exercises'] = exercises
 
@@ -200,7 +201,18 @@ contests_list, number_of_pages = get_contests(contests_category_url)
 
 print(f"Got {len(contests_list)} contests!")
 exercise_list: list[dict] = []
-exercise_list.extend(complete_exercises) # extend with the completed exercises
+
+identifiers = [contest['identifier'] for contest in contests_list]
+
+
+# CHECK FOR CONTEST IDENTIFIER
+for exercise in complete_exercises:
+    try:
+        if exercise['contest_identifier'] in identifiers:
+            exercise_list.append(exercise)
+    except KeyError: print('Detected old complete exercise version, will be updated upon evaluation')
+
+
 for contest_dict in contests_list:
     start = time.time()
     while 'exercises' not in contest_dict.keys(): pass
