@@ -1,7 +1,7 @@
 def dictionary_selector(dictionary: dict, error_message: str = "\n\nTry again"):
 
     def check_length(index: int, length: int = len(dictionary)):
-        return index < length
+        return -1 < index < length
 
     dictionary_string = [
             f"[{i}] {key}"
