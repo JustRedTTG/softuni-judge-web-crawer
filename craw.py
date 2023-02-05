@@ -165,7 +165,12 @@ def get_contests(category_url: str) -> Tuple[list[dict], int]:
     return contests, i-1
 
 
-def get_exercise_information(exercise_url: str, contest_identifier: int, clickable_url: str):
+def fix_names(name):
+    name = name.replace('\t', ' ')
+    return name
+
+
+def get_exercise_information(exercise_url: str, contest_identifier: int, clickable_url: str, number: int):
     exercise = {
         'url': exercise_url,
         'contest_identifier': contest_identifier,
@@ -173,10 +178,14 @@ def get_exercise_information(exercise_url: str, contest_identifier: int, clickab
     }
 
     resp = S.get(judge_url+exercise_url.lstrip('/'))
-    exercise['full_name'] = resp.text.split('\n<h2>\n')[1].split('\n')[0]
-    number, name = exercise['full_name'].split(maxsplit=1)
-    exercise['number'] = int(''.join([n for n in number if n.isdecimal()]))
-    exercise['name'] = name
+    exercise['full_name'] = fix_names(resp.text.split('\n<h2>\n')[1].split('\n')[0])
+
+    if '.' in exercise['full_name']:
+        _, name = exercise['full_name'].split(maxsplit=1)
+        exercise['name'] = name
+    else: exercise['name'] = exercise['full_name']
+    exercise['number'] = number
+
     resp = S.post(judge_url + exercise_url.lstrip('/').replace('Problem','ReadSubmissionResults'), {
         'sort': "SubmissionDate-desc",
         'page': 1,
@@ -209,7 +218,7 @@ def get_exercises(contest: dict):
         # Get the completed urls, continue if it's in them
         if exercise_url in [exercise['url'] for exercise in complete_exercises]: continue
         exercises.append(get_exercise_information(exercise_url, contest["identifier"],
-                        judge_url+f'Contests/{contest["type"].capitalize()}/Index/{contest["identifier"]}#{i}'))
+                        judge_url+f'Contests/{contest["type"].capitalize()}/Index/{contest["identifier"]}#{i}', i))
     contest['exercises'] = exercises
 
 
