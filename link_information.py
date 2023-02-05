@@ -1,5 +1,5 @@
 from hexicapi import save
-from lilypad import dictionary_selector
+from lilypad import dictionary_selector, no_or_yes
 
 judge_url: str = "https://judge.softuni.org/"
 login_url: str = "https://judge.softuni.org/Account/Login"
@@ -89,7 +89,7 @@ def get_contest_url():
         print('Loaded url_backup.sav url data.')
     except TypeError:
         contests_category_url = input_contest_url()
-        if input('Save url? [y/N] ').lower() == 'y':
+        if no_or_yes('Save url?'):
             save.save('url_backup.sav', contests_category_url)
             print('Saved.\n')
         else: print('Skipped.\n')

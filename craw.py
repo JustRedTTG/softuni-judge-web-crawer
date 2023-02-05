@@ -1,10 +1,10 @@
 import threading
 import time
-
 import requests
 import ast
 from hexicapi import save
 from typing import *
+from lilypad import yes_or_no
 from link_information import get_contest_url, login_url, judge_url
 
 
@@ -37,10 +37,6 @@ def get_login_data(username: str, password: str) -> bool:
         'RememberMe': False,
     }, allow_redirects=False)
     return resp.status_code == 302
-
-
-def yes_or_no(msg: str) -> bool:
-    return input(f'{msg} [Y/n]').lower() != 'n' or False
 
 
 def get_contests(category_url: str) -> Tuple[list[dict], int]:

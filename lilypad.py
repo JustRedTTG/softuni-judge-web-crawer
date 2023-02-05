@@ -20,3 +20,9 @@ def dictionary_selector(dictionary: dict, error_message: str = "\n\nTry again"):
         except ValueError: print('\n\nTry again')
 
     return i
+
+
+def yes_or_no(msg: str) -> bool: return input(f'{msg} [Y/n]').lower() != 'n'
+
+
+def no_or_yes(msg: str) -> bool: return input(f'{msg} [y/N]').lower() == 'y'
