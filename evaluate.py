@@ -76,9 +76,9 @@ if os.path.isfile('completed_exercises.sav'):
     if (prev_len := len(save.load('completed_exercises.sav')[0])) < len(complete):
         print(f"Well done, you've completed {len(complete)-prev_len} exercises since the last report!")
 save.save('completed_exercises.sav', [exercises_list[index] for index in complete])
-print('Completed exercises will be saved to "completed_exercises.sav" to improve future craw time\n')
+print('Completed exercises will be saved to "completed_exercises.sav" to improve future craw time.\n')
 
-print("Your report will be saved to report.txt and report.html")
+print("Your report will be saved to report.txt and report.html ;)")
 
 space = ' '
 space_html = '%20'

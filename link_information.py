@@ -86,7 +86,7 @@ def input_contest_url():
 def get_contest_url():
     try:
         contests_category_url = save.load('url_backup.sav')[0]
-        print('Loaded url_backup.sav url data.')
+        print(f'Loaded url_backup.sav url data. URL: {contests_category_url.split("/")[-1].replace("-", " ")}.')
     except TypeError:
         contests_category_url = input_contest_url()
         if no_or_yes('Save url?'):

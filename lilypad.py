@@ -26,3 +26,7 @@ def yes_or_no(msg: str) -> bool: return input(f'{msg} [Y/n]').lower() != 'n'
 
 
 def no_or_yes(msg: str) -> bool: return input(f'{msg} [y/N]').lower() == 'y'
+
+def fix_names(name):
+    name = name.replace('\t', ' ')
+    return name
