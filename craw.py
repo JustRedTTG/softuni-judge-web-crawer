@@ -40,7 +40,7 @@ def get_contests(category_url: str) -> Tuple[list[dict], list[int], int]:
                     'identifier': int(identifier),
                     'name': name,
                     'url_name': url_name,
-                    'type': 'compete' if lines[i+4] != '</td>' else 'practice'
+                    'type': 'compete' if lines[index+4] != '</td>' else 'practice'
                 })
                 contests_identifiers.append(int(identifier))
                 threading.Thread(target=get_exercises, args=(contests[-1],), daemon=True).start()
