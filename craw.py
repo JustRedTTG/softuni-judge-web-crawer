@@ -35,6 +35,42 @@ list_of_content_groups = {
     	"Javascript Advanced": "306/JS-Advanced-Exercises",
     	"Python Advanced": "209/Python-Advanced-Exercises"
     },
+    "OOP": {
+    	"C# OOP": "184/CSharp-OOP-Exercises",
+    	"Java OOP": "187/Java-OOP-Exercises",
+    	"Javascript Applications": "308/JS-Applications-Exercises",
+    	"Python OOP": "210/Python-OOP-Exercises"
+    },
+    "DB Fundamentals": {
+    	"MS-SQL": "62/CSharp-Databases-Basics-Exercises",
+    	"MySQL": "66/Java-Databases-Basics-Exercises",
+    	"Entity Framework Core": "68/CSharp-Databases-Advanced-Exercises",
+    	"Spring Data": "71/Java-Databases-Advanced-Exercises"
+    },
+    "Web Exams": {
+    	"C# Web Exams": "90/CSharp-Web-Development-Basics-Exams",
+    	"Java Web Exams": "91/Java-Web-Development-Basics-Exams",
+    	"ExpressJS Exams": "119/ExpressJS-Exams",
+    	"ReactJS Exams": "120/ReactJS-Exams",
+        "Python Web Exams": "290/Python-Web-Basics-Exams"
+    },
+    "Front-End": {
+    	"JS Front-End": "380/JS-Front-End-Exercise",
+        "HTML & CSS": "134/HTML-and-CSS-Exercises"
+    },
+     "Open Courses": {
+    	"MongoDB Exams": "243/MongoDB",
+        "HTML & CSS": "134/HTML-and-CSS-Exercises",
+        "C# Algorithms Fundamentals": "280/Algorithms-Fundamentals-Exercises",
+        "C# Algorithms Advanced": "282/Algorithms-Advanced-Exercises",
+        "Java Algorithms Fundamentals": "255/Algorithms-Fundamentals-Exercises",
+        "Java Algorithms Advanced": "257/Algorithms-Advanced-Exercises",
+        "Python Algorithms Fundamentals": "351/Algorithms-Fundamentals-Exercises",
+        "C# Data Structures Fundamentals": "261/Data-Structures-Fundamentals-Exercises",
+        "C# Data Structures Advanced": "265/Data-Structures-Advanced-Exercises",
+        "Java Data Structures Fundamentals": "215/Data-Structures-Fundamentals-Exercises",
+        "Java Data Structures Advanced": "217/Data-Structures-Advanced-Exercises"
+    },
     "Pick my own using <number>/<name> format from url": {}
 }
 contests_category_url: str = None
