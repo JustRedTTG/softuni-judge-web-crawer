@@ -86,6 +86,7 @@ def input_contest_url():
 def get_contest_url():
     try:
         contests_category_url = save.load('url_backup.sav')[0]
+        print('Loaded url_backup.sav url data.')
     except TypeError:
         contests_category_url = input_contest_url()
         if input('Save url? [y/N] ').lower() == 'y':
