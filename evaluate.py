@@ -54,11 +54,10 @@ for i, exercise in enumerate(submissions):
     else:
         scores = []
         for submission in exercise['submissions']:
-            maximum_score = len(submission)
-            try:
-                score = len([0 for test in submission if not test['failed']]) / maximum_score
-            except ZeroDivisionError:
-                score = 0
+            maximum_score = len(checked_tests := [test for test in submission if not test['check']])
+            tests = [0 for test in checked_tests if not test['failed']]
+            success_tests = len(tests)
+            score = (success_tests / maximum_score) if success_tests > 0 else 0
             scores.append(int(score * 100))
         scores.sort(reverse=True)
         if scores[0] == 100:
