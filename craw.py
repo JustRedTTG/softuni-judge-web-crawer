@@ -61,7 +61,7 @@ def get_exercise_information(exercise_url: str, contest_identifier: int, clickab
     }
 
     resp = S.get(judge_url+exercise_url.lstrip('/'))
-    exercise_dictionary['full_name'] = fix_names(resp.text.split('\n<h2>\n')[1].split('\n')[0])
+    exercise_dictionary['full_name'] = fix_names(resp.text.split('<h2>')[1].split('"')[0])
 
     if '.' in exercise_dictionary['full_name']:
         _, name = exercise_dictionary['full_name'].split(maxsplit=1)
